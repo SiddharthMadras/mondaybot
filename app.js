@@ -12,6 +12,14 @@ bot.add('/', new builder.SimpleDialog( function (session) {
 session.send('Hello World');
 }));
 
+bot.dialog('/', [
+    function (session) {
+        builder.Prompts.text(session, 'Dei Baadu! What is your name?');
+    },
+    function (session, results) {
+        session.send('Hello %s!', results.response);
+    }
+
 // Setup Restify Server
 var server = restify.createServer();
 server.post('/api/messages', bot.verifyBotFramework(), bot.listen());
