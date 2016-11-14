@@ -1,34 +1,24 @@
-//Add your requirements
+
+
 var restify = require('restify');
-var builder = require('botbuilder');
+var builder = require('../../core/');
 
-var appId = process.env.MY_APP_ID || "Missing your app ID";
-var appSecret = process.env.MY_APP_SECRET || "Missing your app secret";
-
-// Create bot and add dialogs
-var bot = new builder.BotConnectorBot
-({appId: process.env.MY_APP_ID, appSecret: process.env.MY_APP_SECRET});
-bot.add('/', new builder.SimpleDialog( function (session) {
- builder.Prompts.text(session, 'Dei Baadu! What is your name?');
-session.send('Hello World');
-}));
-
-bot.dialog('/', [
-    function (session) {
-       
-    },
-    function (session, results) {
-        session.send('Hello %s!', results.response);
-    }
 
 // Setup Restify Server
 var server = restify.createServer();
-server.post('/api/messages', bot.verifyBotFramework(), bot.listen());
-server.listen(process.env.port || 3000, function () {
-console.log('%s listening to %s', server.name, server.url);
+server.listen(process.env.port || process.env.PORT || 3978, function () {
+   console.log('%s listening to %s', server.name, server.url); 
 });
+  
+// Create chat bot
+var connector = new builder.ChatConnector({
+    appId: process.env.MICROSOFT_APP_ID,
+    appPassword: process.env.MICROSOFT_APP_PASSWORD
+});
+var bot = new builder.UniversalBot(connector);
+server.post('/api/messages', connector.listen());
 
-server.get('/', restify.serveStatic({
-    directory: __dirname,
-    default: '/index.html'
-}));
+
+bot.dialog('/', function (session) {
+    session.send("Hello World");
+});
