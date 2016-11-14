@@ -9,12 +9,13 @@ var appSecret = process.env.MY_APP_SECRET || "Missing your app secret";
 var bot = new builder.BotConnectorBot
 ({appId: process.env.MY_APP_ID, appSecret: process.env.MY_APP_SECRET});
 bot.add('/', new builder.SimpleDialog( function (session) {
+ builder.Prompts.text(session, 'Dei Baadu! What is your name?');
 session.send('Hello World');
 }));
 
 bot.dialog('/', [
     function (session) {
-        builder.Prompts.text(session, 'Dei Baadu! What is your name?');
+       
     },
     function (session, results) {
         session.send('Hello %s!', results.response);
